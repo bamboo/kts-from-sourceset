@@ -1,8 +1,6 @@
 package plugins
 
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.*
 
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
@@ -15,15 +13,18 @@ class MyGradlePluginTest {
     fun `it logs debug message`() {
         // given:
         val logger = mock<Logger>()
-        val project = mock<Project> {
-            on { getLogger() } doReturn logger
-        }
+        val project = mock<Project>()
+        whenever(project.logger)
+            .doReturn(logger)
 
         // when:
-        Class
+        val ctor = Class
             .forName("My_gradle_plugin_gradle")
             .getConstructor(Project::class.java)
-            .newInstance(project)
+
+        // SET BREAKPOINT HERE
+        // then try to step into the precompiled .gradle.kts script
+        ctor.newInstance(project)
 
         // then:
         verify(logger).debug("Hello from Gradle plugin!")
